@@ -5,7 +5,7 @@ Quadcopter-Sim-V1 is a modular 1D flight simulator designed to bridge the gap be
 
 ---
 
-## 🏗️ System Architecture
+## System Architecture
 The project is divided into four distinct layers, mirroring the architecture of industrial flight stacks:
 
 1.  **Mission Layer (`parser.py`):** A stateful interpreter for "DroneScript" (a custom DSL). It handles time-based (`WAIT`) and position-based (`MOVE`) commands using a Finite State Machine logic.
@@ -17,7 +17,7 @@ The project is divided into four distinct layers, mirroring the architecture of 
 
 ---
 
-## 📊 Simulation Performance
+## Simulation Performance
 The following plot captures a full mission sequence including **Takeoff**, **Hover/Wait**, and **Landing**. 
 
 ![Quadcopter Performance](assets/altitude_performance_plot.png)
@@ -30,7 +30,7 @@ The following plot captures a full mission sequence including **Takeoff**, **Hov
 
 ---
 
-## 🔬 Technical Deep-Dive
+## Technical Deep-Dive
 
 ### State Estimation (Kalman Filter)
 The simulator implements a recursive Bayesian filter. It calculates the optimal state estimate by balancing the physics-based prediction with noisy sensor telemetry.
@@ -62,14 +62,14 @@ The simulation environment approximates Newtonian motion in discrete steps ($\De
 
 ---
 
-## 🚀 Future Roadmap
+## Future Roadmap
 * **Phase B:** Transition to 6-DOF Dynamics using Quaternions/Euler Angles.
 * **Phase C:** Formal Lexer/Tokenization for complex mission grammars using Regex.
 * **Phase D:** Asynchronous Failsafe Interrupts for emergency landing scenarios.
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 ```bash
 # Clone the repository
 git clone [https://github.com/alfayezahmad/Quadcopter-Sim-V1.git](https://github.com/alfayezahmad/Quadcopter-Sim-V1.git)
