@@ -17,6 +17,19 @@ The project is divided into four distinct layers, mirroring the architecture of 
 
 ---
 
+## 📊 Simulation Performance
+The following plot captures a full mission sequence including **Takeoff**, **Hover/Wait**, and **Landing**. 
+
+![Quadcopter Performance](assets/altitude_performance_plot.png)
+
+### Key Observations:
+* **Filtering:** The Kalman Filter successfully dampens sensor noise, providing a smooth state estimate for the PID controller.
+* **Transient Response:** There is a slight overshoot during rapid altitude changes, which can be further optimized by tuning the $K_d$ (Derivative) gain in future iterations.
+
+
+
+---
+
 ## 🔬 Technical Deep-Dive
 
 ### State Estimation (Kalman Filter)
