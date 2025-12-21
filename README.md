@@ -66,3 +66,23 @@ The simulation environment approximates Newtonian motion in discrete steps ($\De
 * **Phase B:** Transition to 6-DOF Dynamics using Quaternions/Euler Angles.
 * **Phase C:** Formal Lexer/Tokenization for complex mission grammars using Regex.
 * **Phase D:** Asynchronous Failsafe Interrupts for emergency landing scenarios.
+
+---
+
+## 🚀 Quick Start
+```bash
+# Clone the repository
+git clone [https://github.com/alfayezahmad/Quadcopter-Sim-V1.git](https://github.com/alfayezahmad/Quadcopter-Sim-V1.git)
+cd Quadcopter-Sim-V1
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run simulation
+python src/main.py
+```
+
+---
+
+## License
+This project is licensed under the MIT License - see the LICENSE file for details.
