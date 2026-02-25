@@ -9,18 +9,25 @@ DT = 0.1
 MASS = 1.0
 GRAVITY = 9.81
 
-
 def run():
-    # --- Robust Path Handling ---
-    # Calculates path relative to THIS file's location
+    # --- Cloud-Native Path Handling ---
+    # Allow environment variables to override default paths for Docker volumes
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    mission_path = os.path.join(base_dir, "..", "data", "mission.txt")
+    default_mission = os.path.join(base_dir, "data", "mission.txt")
+    default_output = os.path.join(base_dir, "data", "flight_plot.png")
+    
+    mission_path = os.environ.get("MISSION_PATH", default_mission)
+    output_path = os.environ.get("OUTPUT_PATH", default_output)
+
+    # Ensure output directory exists
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
     # --- System Initialization ---
     try:
         mission = MissionParser(mission_path)
     except FileNotFoundError as e:
         print(f"[ERROR] {e}")
+        print(f"[HINT] Ensure you have a valid mission file at {mission_path}")
         return
 
     brain = PID(kp=15.0, ki=0.5, kd=10.0, dt=DT)
@@ -41,7 +48,7 @@ def run():
             print("[INFO] Mission sequence completed successfully.")
             break
 
-            # 2. Control (The "Actuator")
+        # 2. Control (The "Actuator")
         # Added gravity feed-forward to assist the PID
         thrust = brain.compute(target, kf.estimate) + (MASS * GRAVITY)
 
@@ -72,8 +79,10 @@ def run():
     plt.ylabel("Altitude (m)")
     plt.legend()
     plt.grid(True, alpha=0.3)
-    plt.show()
-
+    
+    # Cloud-Native Tweak: Save instead of show
+    plt.savefig(output_path)
+    print(f"[SUCCESS] Flight telemetry plot saved to: {output_path}")
 
 if __name__ == "__main__":
     run()
