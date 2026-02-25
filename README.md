@@ -1,12 +1,32 @@
 # Quadcopter-Sim-V1: Autonomous Flight Pipeline
 **A 1D Digital Twin for Control Systems and Mission Logic.**
 
+![Python](https://img.shields.io/badge/Python-3.10-blue)
+![Architecture](https://img.shields.io/badge/Architecture-Control_Theory-orange)
+![Deployment](https://img.shields.io/badge/Deployment-Docker_|_SITL-blue)
+
 Quadcopter-Sim-V1 is a modular 1D flight simulator designed to bridge the gap between high-level autonomous mission planning and low-level physical control. It implements a full robotics stack—from custom DSL parsing to recursive state estimation.
 
 ---
 
 ## System Architecture
 The project is divided into four distinct layers, mirroring the architecture of industrial flight stacks:
+```mermaid
+graph TD
+    subgraph Mission Control
+        A[Mission DSL Parser] -->|Target Altitude| B(PID Controller)
+    end
+    
+    subgraph Physics & Environment
+        B -->|Thrust Command| C[Newtonian Physics Engine]
+        C -->|True Altitude| D{Gaussian Sensor Noise}
+    end
+    
+    subgraph Perception
+        D -->|Raw Measurement| E(Kalman Filter)
+        E -->|Clean State Estimate| B
+    end
+```
 
 1.  **Mission Layer (`parser.py`):** A stateful interpreter for "DroneScript" (a custom DSL). It handles time-based (`WAIT`) and position-based (`MOVE`) commands using a Finite State Machine logic.
 2.  **Estimation Layer (`drone_sim.py`):** A Linear Kalman Filter that suppresses Gaussian sensor noise to recover the "Ground Truth" altitude.
@@ -62,10 +82,23 @@ The simulation environment approximates Newtonian motion in discrete steps ($\De
 
 ---
 
+## Cloud-Native Execution (Monte Carlo Testing)
+Testing autonomous flight logic requires massive scale. By containerizing this SITL engine, we can deploy it as a Kubernetes batch job to run hundreds of simultaneous Monte Carlo simulations, testing different PID tunings in parallel.
+```bash
+# 1. Build the headless simulator image
+docker build -t quadcopter-sitl .
+
+# 2. Run the simulation and extract the telemetry plot via volume mount
+docker run --rm -v $(pwd)/assets:/app/data quadcopter-sitl
+```
+
+---
+
 ## Future Roadmap
 * **Phase B:** Transition to 6-DOF Dynamics using Quaternions/Euler Angles.
 * **Phase C:** Formal Lexer/Tokenization for complex mission grammars using Regex.
 * **Phase D:** Asynchronous Failsafe Interrupts for emergency landing scenarios.
+* **Phase E (Cloud):** Kubernetes Job manifest generation for parallelized genetic algorithm tuning of the PID controller.
 
 ---
 
@@ -76,6 +109,8 @@ git clone [https://github.com/alfayezahmad/Quadcopter-Sim-V1.git](https://github
 cd Quadcopter-Sim-V1
 
 # Install dependencies
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 
 # Run simulation
